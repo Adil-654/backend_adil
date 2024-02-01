@@ -3,7 +3,7 @@ const app = express();
 const mongoose = require('mongoose')
 const mongodb=require('mongodb')
 const cookieparser = require('cookie-parser')
-
+app.use(express.static('public'));
 const jwt = require('jsonwebtoken')
 app.use(cookieparser())
 const mongouri = "mongodb+srv://adilahmadshah7860:alima7860@cluster0.k7tugya.mongodb.net/?retryWrites=true&w=majority"
@@ -153,8 +153,26 @@ app.post('/delete',async (req,res)=>{
   }
 
 })
+app.get('/update',(req,res)=>{
+  res.render('update')
+})
 
+app.post('/update',async (req,res)=>{
+  const {name,email,password}=req.body
+console.log(req.body)
+  const user=await User.findOne({email:email})
+  console.log(user)
+  if(user){
+    await User.updateOne({email:email},{name:name,password:password})
+    
 
+  }
+  else{
+    res.send(404).json({message:"not found"})
+  }
+  res.render('index1')
+
+})
 app.listen(3000, () => {
   console.log("server started")
 })  
